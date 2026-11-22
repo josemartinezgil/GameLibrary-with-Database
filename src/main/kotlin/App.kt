@@ -1,19 +1,17 @@
 package org.example
 
 import org.example.database.ConnectionDB
-import org.example.model.CollectionGame
-import org.example.model.Player
-import org.example.model.Videogame
 import org.example.repository.CollectionGameDAO
 import org.example.repository.PlayerDAO
 import org.example.repository.VideogamesCollectionDAO
 import org.example.repository.VideogameDAO
+import org.example.service.AppService
 
-val DATABASE = ConnectionDB.getConnection() ?: throw Exception("Database connection failed")
 val VIDEOGAME_DAO = VideogameDAO
 val COLLECTION_DAO = CollectionGameDAO
 val VIDEOGAME_COLLECTION_DAO = VideogamesCollectionDAO
 val PLAYER_DAO = PlayerDAO
+val SERVICE = AppService
 
 fun main() {
 
@@ -72,10 +70,10 @@ fun videogameMenu() {
 
         when (option) {
             1 -> VIDEOGAME_DAO.listVideogamesByTitle()
-            2 -> addNewVideogame()
-            3 -> showVideogameById()
-            4 -> updateVideogameRating()
-            5 -> removeVideogame()
+            2 -> SERVICE.addNewVideogame()
+            3 -> SERVICE.showVideogameById()
+            4 -> SERVICE.updateVideogameRating()
+            5 -> SERVICE.removeVideogame()
             0 -> println("Returning to game library menu...")
             else -> println("Invalid option. Try again.")
         }
@@ -106,12 +104,12 @@ fun collectionMenu(idPlayer: Int) {
 
         when (option) {
             1 -> COLLECTION_DAO.listCollectionsByName()
-            2 -> addNewCollection(idPlayer)
-            3 -> showCollectionById()
-            4 -> updateCollectionName()
-            5 -> addVideogameToCollection()
-            6 -> removeVideogameFromCollection()
-            7 -> removeCollection()
+            2 -> SERVICE.addNewCollection(idPlayer)
+            3 -> SERVICE.showCollectionById()
+            4 -> SERVICE.updateCollectionName()
+            5 -> SERVICE.addVideogameToCollection()
+            6 -> SERVICE.removeVideogameFromCollection()
+            7 -> SERVICE.removeCollection()
             0 -> println("Returning to player menu...")
             else -> println("Invalid option. Try again.")
         }
@@ -138,8 +136,8 @@ fun playerMenu() {
         option = selectOptionMenu()
 
         when (option) {
-            1 -> addNewPlayer()
-            2 -> removePlayer()
+            1 -> SERVICE.addNewPlayer()
+            2 -> SERVICE.removePlayer()
             3 -> loginPlayer()
             0 -> println("Returning to game library menu...")
             else -> println("Invalid option. Try again.")
@@ -173,282 +171,3 @@ fun selectOptionMenu(): Int {
     print("Select an option: ")
     return readln().toIntOrNull() ?: -1
 }
-
-
-fun addNewVideogame() {
-    print("Insert videogame title: ")
-    val title = readln()
-
-    print("Insert videogame genre: ")
-    val genre = readln()
-
-    print("Insert videogame year: ")
-    val year = readln().toIntOrNull()
-
-    if (year == null) {
-        println("Invalid year.")
-        return
-    }
-
-    print("Insert videogame rating: ")
-    val rating = readln().toDoubleOrNull()
-
-    if (rating == null) {
-        println("Invalid rating.")
-        return
-    }
-
-    val videogame = Videogame(
-        idVideogame = 0,
-        title = title,
-        genre = genre,
-        year = year,
-        rating = rating
-    )
-
-    VIDEOGAME_DAO.insertVideogame(videogame)
-}
-
-fun showVideogameById() {
-    print("Insert videogame ID: ")
-    val id = readln().toIntOrNull()
-
-    if (id == null) {
-        println("Invalid videogame ID.")
-        return
-    }
-
-    val videogame = VIDEOGAME_DAO.readVideogameById(id)
-
-    if (videogame != null) {
-        VIDEOGAME_DAO.listVideogameById(videogame)
-    } else {
-        println("Videogame not found.")
-    }
-}
-
-
-fun updateVideogameRating() {
-    print("Insert videogame ID: ")
-    val id = readln().toIntOrNull()
-
-    if (id == null) {
-        println("Invalid videogame ID.")
-        return
-    }
-
-    val videogame = VIDEOGAME_DAO.readVideogameById(id)
-
-    if (videogame == null) {
-        println("Videogame not found.")
-        return
-    }
-
-    print("Insert new rating: ")
-    val newRating = readln().toDoubleOrNull()
-
-    if (newRating == null || newRating < 0 || newRating > 10) {
-        println("Invalid rating. Enter a value between 0 and 10.")
-        return
-    }
-
-    VIDEOGAME_DAO.updateRatingVideogame(videogame, newRating)
-}
-
-
-fun removeVideogame() {
-    print("Insert videogame ID: ")
-    val id = readln().toIntOrNull()
-
-    if (id == null) {
-        println("Invalid videogame ID.")
-        return
-    }
-
-    val videogame = VIDEOGAME_DAO.readVideogameById(id)
-
-    if (videogame == null) {
-        println("Videogame not found.")
-        return
-    }
-
-    VIDEOGAME_DAO.deleteVideogame(id)
-}
-
-
-fun addNewPlayer() {
-    print("Insert player name: ")
-    val name = readln().trim()
-
-    if (name.isEmpty()) {
-        println("Invalid player name.")
-        return
-    }
-
-    val player = Player(
-        idPlayer = 0,
-        name = name
-    )
-
-    PLAYER_DAO.insertPlayer(player)
-}
-
-
-fun removePlayer() {
-    print("Insert player ID: ")
-    val id = readln().toIntOrNull()
-
-    if (id == null || id <= 0) {
-        println("Invalid player ID.")
-        return
-    }
-
-    PLAYER_DAO.deletePlayer(id)
-}
-
-
-fun addNewCollection(idPlayer: Int) {
-    print("Insert collection name: ")
-    val name = readln().trim()
-
-    if (name.isEmpty()) {
-        println("Invalid collection name.")
-        return
-    }
-
-    val collection = CollectionGame(
-        idCollection = 0,
-        name = name,
-        idPlayer = idPlayer
-    )
-
-    COLLECTION_DAO.insertCollection(collection)
-}
-
-
-
-fun showCollectionById() {
-    print("Insert collection ID: ")
-    val id = readln().toIntOrNull()
-
-    if (id == null || id <= 0) {
-        println("Invalid collection ID.")
-        return
-    }
-
-    val collection = COLLECTION_DAO.readCollectionById(id)
-
-    if (collection != null) {
-        COLLECTION_DAO.listCollectionById(collection)
-
-        val videogames = VIDEOGAME_COLLECTION_DAO.readVideogamesByCollection(id)
-
-        if (videogames.isEmpty()) {
-            println("This collection has no videogames.")
-        } else {
-            println("Videogames in this collection:")
-
-            for (videogame in videogames) {
-                println("${videogame.idVideogame}. ${videogame.title} - Rating: ${videogame.rating}")
-            }
-        }
-    } else {
-        println("Collection not found.")
-    }
-}
-
-
-
-fun updateCollectionName() {
-    print("Insert collection ID: ")
-    val id = readln().toIntOrNull()
-
-    if (id == null || id <= 0) {
-        println("Invalid collection ID.")
-        return
-    }
-
-    val collection = COLLECTION_DAO.readCollectionById(id)
-
-    if (collection == null) {
-        println("Collection not found.")
-        return
-    }
-
-    print("Insert new collection name: ")
-    val newName = readln().trim()
-
-    if (newName.isEmpty()) {
-        println("Invalid collection name.")
-        return
-    }
-
-    COLLECTION_DAO.updateCollectionName(collection, newName)
-}
-
-
-fun removeCollection() {
-    print("Insert collection ID: ")
-    val id = readln().toIntOrNull()
-
-    if (id == null || id <= 0) {
-        println("Invalid collection ID.")
-        return
-    }
-
-    val collection = COLLECTION_DAO.readCollectionById(id)
-
-    if (collection == null) {
-        println("Collection not found.")
-        return
-    }
-
-    COLLECTION_DAO.deleteCollection(id)
-}
-
-
-fun addVideogameToCollection() {
-    print("Insert collection ID: ")
-    val idCollection = readln().toIntOrNull()
-
-    print("Insert videogame ID: ")
-    val idVideogame = readln().toIntOrNull()
-
-    if (idCollection == null || idCollection <= 0 ||
-        idVideogame == null || idVideogame <= 0) {
-        println("Invalid ID.")
-        return
-    }
-
-    print("Insert date (YYYY-MM-DD hh:mm:ss): ")
-    val dateAdded = readln()
-
-    VIDEOGAME_COLLECTION_DAO.addVideogameToCollection(
-        idCollection,
-        idVideogame,
-        dateAdded
-    )
-}
-
-
-fun removeVideogameFromCollection() {
-    print("Insert collection ID: ")
-    val idCollection = readln().toIntOrNull()
-
-    print("Insert videogame ID: ")
-    val idVideogame = readln().toIntOrNull()
-
-    if (idCollection == null || idCollection <= 0 ||
-        idVideogame == null || idVideogame <= 0) {
-        println("Invalid ID.")
-        return
-    }
-
-    VIDEOGAME_COLLECTION_DAO.removeVideogameInCollection(
-        idCollection,
-        idVideogame
-    )
-}
-
-
-
