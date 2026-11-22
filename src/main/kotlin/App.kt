@@ -35,9 +35,28 @@ val newPlayer = Player(
 
 fun main() {
 
+    // Testing
+    if (!ConnectionDB.testConnection()) {
+        println("Unable to connect to the database")
+        return
+    }
+
+
+    val videogames = VideogameDAO.readVideogames()
+
+    println("Videogames found: ${videogames.size}")
+
+    for (videogame in videogames) {
+        println(videogame)
+    }
+
+
+    /*
     ConnectionDB.testConnection()
 
     principalMenu()
+
+     */
 
     /*
     try {
