@@ -15,14 +15,6 @@ val COLLECTION_DAO = CollectionGameDAO
 val VIDEOGAME_COLLECTION_DAO = VideogamesCollectionDAO
 val PLAYER_DAO = PlayerDAO
 
-val newVideogame = Videogame(
-    6,
-    "Elden Ring",
-    "Souls-like",
-    2022,
-    9.6
-)
-
 val newCollection = CollectionGame(
     4,
     "Playstation",
@@ -36,35 +28,13 @@ val newPlayer = Player(
 
 fun main() {
 
-    // Testing
     if (!ConnectionDB.testConnection()) {
         println("Unable to connect to the database")
         return
     }
 
-    /*
-    ConnectionDB.testConnection()
-
     principalMenu()
 
-     */
-
-    /*
-    try {
-        database.autoCommit = false
-
-        // lógica
-
-        database.commit()
-        println("The operations has been executed correctly")
-    } catch (e: Exception) {
-        database.rollback()
-        println("The operations has not been executed")
-        println("Error: ${e.message}")
-    }
-    */
-
-    ConnectionDB.closeConnection(DATABASE)
 }
 
 fun principalMenuView() {
@@ -113,10 +83,10 @@ fun videogameMenu() {
 
         when (option) {
             1 -> VIDEOGAME_DAO.listVideogamesByTitle()
-            2 -> VIDEOGAME_DAO.insertVideogame(newVideogame)
-            3 -> VIDEOGAME_DAO.listVideogameById(newVideogame)
-            4 -> VIDEOGAME_DAO.updateRatingVideogame(newVideogame, 9.6)
-            5 -> VIDEOGAME_DAO.deleteVideogame(6)
+            2 -> addNewVideogame()
+            3 -> showVideogameById()
+            4 -> updateVideogameRating()
+            5 -> removeVideogame()
             0 -> println("Returning to game library menu...")
             else -> println("Invalid option. Try again.")
         }
@@ -198,3 +168,105 @@ fun selectOptionMenu(): Int {
     print("Select an option: ")
     return readln().toIntOrNull() ?: -1
 }
+
+
+fun addNewVideogame() {
+    print("Insert videogame title: ")
+    val title = readln()
+
+    print("Insert videogame genre: ")
+    val genre = readln()
+
+    print("Insert videogame year: ")
+    val year = readln().toIntOrNull()
+
+    if (year == null) {
+        println("Invalid year.")
+        return
+    }
+
+    print("Insert videogame rating: ")
+    val rating = readln().toDoubleOrNull()
+
+    if (rating == null) {
+        println("Invalid rating.")
+        return
+    }
+
+    val videogame = Videogame(
+        idVideogame = 0,
+        title = title,
+        genre = genre,
+        year = year,
+        rating = rating
+    )
+
+    VIDEOGAME_DAO.insertVideogame(videogame)
+}
+
+fun showVideogameById() {
+    print("Insert videogame ID: ")
+    val id = readln().toIntOrNull()
+
+    if (id == null) {
+        println("Invalid videogame ID.")
+        return
+    }
+
+    val videogame = VIDEOGAME_DAO.readVideogameById(id)
+
+    if (videogame != null) {
+        VIDEOGAME_DAO.listVideogameById(videogame)
+    } else {
+        println("Videogame not found.")
+    }
+}
+
+
+fun updateVideogameRating() {
+    print("Insert videogame ID: ")
+    val id = readln().toIntOrNull()
+
+    if (id == null) {
+        println("Invalid videogame ID.")
+        return
+    }
+
+    val videogame = VIDEOGAME_DAO.readVideogameById(id)
+
+    if (videogame == null) {
+        println("Videogame not found.")
+        return
+    }
+
+    print("Insert new rating: ")
+    val newRating = readln().toDoubleOrNull()
+
+    if (newRating == null || newRating < 0 || newRating > 10) {
+        println("Invalid rating. Enter a value between 0 and 10.")
+        return
+    }
+
+    VIDEOGAME_DAO.updateRatingVideogame(videogame, newRating)
+}
+
+
+fun removeVideogame() {
+    print("Insert videogame ID: ")
+    val id = readln().toIntOrNull()
+
+    if (id == null) {
+        println("Invalid videogame ID.")
+        return
+    }
+
+    val videogame = VIDEOGAME_DAO.readVideogameById(id)
+
+    if (videogame == null) {
+        println("Videogame not found.")
+        return
+    }
+
+    VIDEOGAME_DAO.deleteVideogame(id)
+}
+

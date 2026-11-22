@@ -67,7 +67,7 @@ object VideogameDAO {
             conn.prepareStatement("SELECT * FROM videogames WHERE id_videogame = ${videogame.idVideogame}").use { stmt ->
                 val rs = stmt.executeQuery()
                 while (rs.next()) {
-                    println("* [${rs.getString("id_videogame")}] ${rs.getString("title")}, ${rs.getInt("year")} (${rs.getString("genre")}) - ${rs.getInt("rating")}")
+                    println("* [${rs.getString("id_videogame")}] ${rs.getString("title")}, ${rs.getInt("year")} (${rs.getString("genre")}) - ${rs.getDouble("rating")}")
                 }
             }
         }
