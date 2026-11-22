@@ -21,11 +21,6 @@ val newCollection = CollectionGame(
     1
 )
 
-val newPlayer = Player(
-    1,
-    "Jose"
-)
-
 fun main() {
 
     if (!ConnectionDB.testConnection()) {
@@ -146,8 +141,8 @@ fun playerMenu() {
         option = selectOptionMenu()
 
         when (option) {
-            1 -> PLAYER_DAO.insertPlayer(newPlayer)
-            2 -> PLAYER_DAO.deletePlayer(1)
+            1 -> addNewPlayer()
+            2 -> removePlayer()
             3 -> loginPlayer()
             0 -> println("Returning to game library menu...")
             else -> println("Invalid option. Try again.")
@@ -158,8 +153,21 @@ fun playerMenu() {
 
 fun loginPlayer() {
     print("Insert Player ID: ")
-    val idPlayer = readln().toInt()
+    val idPlayer = readln().toIntOrNull()
 
+    if (idPlayer == null || idPlayer <= 0) {
+        println("Invalid player ID.")
+        return
+    }
+
+    val player = PLAYER_DAO.readPlayerById(idPlayer)
+
+    if (player == null) {
+        println("Player not found.")
+        return
+    }
+
+    println("Welcome, ${player.name}!")
     collectionMenu(idPlayer)
 }
 
@@ -269,4 +277,37 @@ fun removeVideogame() {
 
     VIDEOGAME_DAO.deleteVideogame(id)
 }
+
+
+fun addNewPlayer() {
+    print("Insert player name: ")
+    val name = readln().trim()
+
+    if (name.isEmpty()) {
+        println("Invalid player name.")
+        return
+    }
+
+    val player = Player(
+        idPlayer = 0,
+        name = name
+    )
+
+    PLAYER_DAO.insertPlayer(player)
+}
+
+
+fun removePlayer() {
+    print("Insert player ID: ")
+    val id = readln().toIntOrNull()
+
+    if (id == null || id <= 0) {
+        println("Invalid player ID.")
+        return
+    }
+
+    PLAYER_DAO.deletePlayer(id)
+}
+
+
 

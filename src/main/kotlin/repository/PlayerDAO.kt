@@ -5,6 +5,29 @@ import org.example.model.Player
 import kotlin.use
 
 object PlayerDAO {
+    fun readPlayerById(id: Int): Player? {
+        var player: Player? = null
+
+        val sql = "SELECT id_player, name FROM players WHERE id_player = ?"
+
+        ConnectionDB.getConnection()?.use { conn ->
+            conn.prepareStatement(sql).use { stmt ->
+                stmt.setInt(1, id)
+
+                stmt.executeQuery().use { rs ->
+                    if (rs.next()) {
+                        player = Player(
+                            idPlayer = rs.getInt("id_player"),
+                            name = rs.getString("name")
+                        )
+                    }
+                }
+            }
+        }
+
+        return player
+    }
+
     fun insertPlayer(player: Player) {
         val sql = "INSERT INTO players(name) VALUES (?)"
         ConnectionDB.getConnection()?.use { conn ->
