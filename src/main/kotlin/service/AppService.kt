@@ -144,7 +144,6 @@ object AppService {
 
     fun showPlayerCollections(idPlayer: Int) {
         val collections = CollectionGameDAO.readCollections()
-
         var found = false
 
         for (collection in collections) {
@@ -180,7 +179,7 @@ object AppService {
 
 
 
-    fun showCollectionById() {
+    fun showCollectionById(idPlayer: Int) {
         print("Insert collection ID: ")
         val id = readln().toIntOrNull()
 
@@ -191,7 +190,7 @@ object AppService {
 
         val collection = CollectionGameDAO.readCollectionById(id)
 
-        if (collection != null) {
+        if (collection != null && collection.idPlayer == idPlayer) {
             CollectionGameDAO.listCollectionById(collection)
 
             val videogames = VideogamesCollectionDAO.readVideogamesByCollection(id)
@@ -206,13 +205,13 @@ object AppService {
                 }
             }
         } else {
-            println("Collection not found.")
+            println("Collection not found or does not belong to this player.")
         }
     }
 
 
 
-    fun updateCollectionName() {
+    fun updateCollectionName(idPlayer: Int) {
         print("Insert collection ID: ")
         val id = readln().toIntOrNull()
 
@@ -223,8 +222,8 @@ object AppService {
 
         val collection = CollectionGameDAO.readCollectionById(id)
 
-        if (collection == null) {
-            println("Collection not found.")
+        if (collection == null || collection.idPlayer != idPlayer) {
+            println("Collection not found or does not belong to this player.")
             return
         }
 
@@ -240,7 +239,7 @@ object AppService {
     }
 
 
-    fun removeCollection() {
+    fun removeCollection(idPlayer: Int) {
         print("Insert collection ID: ")
         val id = readln().toIntOrNull()
 
@@ -251,8 +250,8 @@ object AppService {
 
         val collection = CollectionGameDAO.readCollectionById(id)
 
-        if (collection == null) {
-            println("Collection not found.")
+        if (collection == null || collection.idPlayer != idPlayer) {
+            println("Collection not found or does not belong to this player.")
             return
         }
 
@@ -260,7 +259,7 @@ object AppService {
     }
 
 
-    fun addVideogameToCollection() {
+    fun addVideogameToCollection(idPlayer: Int) {
         print("Insert collection ID: ")
         val idCollection = readln().toIntOrNull()
 
@@ -270,6 +269,13 @@ object AppService {
         if (idCollection == null || idCollection <= 0 ||
             idVideogame == null || idVideogame <= 0) {
             println("Invalid ID.")
+            return
+        }
+
+        val collection = CollectionGameDAO.readCollectionById(idCollection)
+
+        if (collection == null || collection.idPlayer != idPlayer) {
+            println("Collection not found or does not belong to this player.")
             return
         }
 
@@ -284,7 +290,7 @@ object AppService {
     }
 
 
-    fun removeVideogameFromCollection() {
+    fun removeVideogameFromCollection(idPlayer: Int) {
         print("Insert collection ID: ")
         val idCollection = readln().toIntOrNull()
 
@@ -294,6 +300,13 @@ object AppService {
         if (idCollection == null || idCollection <= 0 ||
             idVideogame == null || idVideogame <= 0) {
             println("Invalid ID.")
+            return
+        }
+
+        val collection = CollectionGameDAO.readCollectionById(idCollection)
+
+        if (collection == null || collection.idPlayer != idPlayer) {
+            println("Collection not found or does not belong to this player.")
             return
         }
 

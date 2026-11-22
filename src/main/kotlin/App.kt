@@ -105,11 +105,11 @@ fun collectionMenu(idPlayer: Int) {
         when (option) {
             1 -> SERVICE.showPlayerCollections(idPlayer)
             2 -> SERVICE.addNewCollection(idPlayer)
-            3 -> SERVICE.showCollectionById()
-            4 -> SERVICE.updateCollectionName()
-            5 -> SERVICE.addVideogameToCollection()
-            6 -> SERVICE.removeVideogameFromCollection()
-            7 -> SERVICE.removeCollection()
+            3 -> SERVICE.showCollectionById(idPlayer)
+            4 -> SERVICE.updateCollectionName(idPlayer)
+            5 -> SERVICE.addVideogameToCollection(idPlayer)
+            6 -> SERVICE.removeVideogameFromCollection(idPlayer)
+            7 -> SERVICE.removeCollection(idPlayer)
             0 -> println("Returning to player menu...")
             else -> println("Invalid option. Try again.")
         }
