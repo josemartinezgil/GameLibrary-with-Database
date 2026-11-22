@@ -33,12 +33,14 @@ He dividido la aplicación en varios menús para organizar las opciones.
 
 ### Colecciones
 
-- Consultar las colecciones guardadas.
-- Crear una colección asociada al jugador seleccionado.
-- Buscar una colección por su ID y ver los videojuegos que contiene.
-- Cambiar el nombre de una colección.
-- Añadir y quitar videojuegos de una colección.
-- Eliminar colecciones.
+- Consultar únicamente las colecciones del jugador seleccionado.
+- Crear una colección asociada a ese jugador.
+- Buscar una de sus colecciones por ID y ver los videojuegos que contiene.
+- Cambiar el nombre de sus colecciones.
+- Añadir y quitar videojuegos de sus colecciones.
+- Eliminar sus colecciones.
+
+Para estas operaciones, la aplicación comprueba el ID del jugador y el propietario de cada colección antes de permitir los cambios.
 
 ## Organización del proyecto
 
@@ -173,9 +175,11 @@ No es un inicio de sesión con contraseña: es una forma sencilla de seleccionar
 
 La tabla `collections` incluye `id_player` como clave foránea. Cuando creo una colección desde el menú de un jugador, se guarda asociada a ese ID.
 
-**Quiero que cada jugador pueda ver y gestionar solamente sus propias colecciones.** Para conseguirlo por completo, las operaciones de consultar, modificar, eliminar y añadir o quitar videojuegos deben comprobar que la colección pertenece al jugador seleccionado.
+He decidido que **cada jugador pueda ver y gestionar solamente sus propias colecciones**. Cuando entra en el menú, el listado muestra únicamente las colecciones que tienen su `id_player`.
 
-**Estado actual:** la asociación al crear colecciones ya está implementada y el acceso comprueba que el jugador existe. Sin embargo, todavía tengo pendiente aplicar la comprobación del propietario a todas las operaciones del menú de colecciones. Por tanto, por ahora no se garantiza esa restricción en todas las opciones.
+Además, antes de consultar una colección, cambiar su nombre, eliminarla o añadir y quitar videojuegos, la aplicación comprueba que esa colección pertenece al jugador seleccionado. Para ello, comparo el `idPlayer` de la colección con el ID del jugador que está utilizando el menú.
+
+Si intenta utilizar una colección de otro jugador, la operación se cancela y se muestra un mensaje. He añadido estas comprobaciones para que cada jugador tenga sus colecciones separadas, sin complicar el funcionamiento de la aplicación.
 
 ### Separación entre App, AppService y DAO
 
@@ -199,8 +203,10 @@ Para comprobar la gestión de errores de la transacción, intenté añadir dos v
 
 Después de trasladar las funciones a `AppService.kt`, volví a ejecutar la aplicación y comprobé que seguía conectándose a MySQL y que podía navegar por sus menús.
 
+Por último, probé la gestión de colecciones entrando con distintos jugadores. Comprobé que cada uno veía sus propias colecciones y que no podía consultar, modificar ni eliminar las de otro jugador. También comprobé que se rechazaban los intentos de añadir o quitar videojuegos de colecciones ajenas.
+
 ## Conclusión
 
 Con esta práctica he aprendido a conectar una aplicación Kotlin con MySQL mediante JDBC, a organizar los datos en tablas relacionadas y a utilizar los DAO para separar las consultas SQL del resto del programa.
 
-También he trabajado con transacciones y he reorganizado el proyecto para tener el código más ordenado y facilitar su mantenimiento.
+También he trabajado con transacciones, he añadido comprobaciones para que cada jugador gestione sus propias colecciones y he reorganizado el proyecto para tener el código más ordenado y facilitar su mantenimiento.
