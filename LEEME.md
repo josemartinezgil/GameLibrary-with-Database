@@ -1,4 +1,6 @@
 # GameLibrary - Catálogo de videojuegos con MySQL
+##### * Jose Martínez Gil *
+
 
 GameLibrary es una aplicación de consola que he desarrollado en **Kotlin** para la asignatura de **Acceso a Datos de 2.º de DAM**.
 
