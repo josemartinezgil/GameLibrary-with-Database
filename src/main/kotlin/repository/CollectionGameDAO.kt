@@ -17,7 +17,8 @@ object CollectionGameDAO {
                     list.add(
                         CollectionGame(
                             idCollection = rs.getInt("id_collection"),
-                            name = rs.getString("name")
+                            name = rs.getString("name"),
+                            idPlayer = rs.getInt("id_player")
                         )
                     )
                 }
@@ -60,7 +61,8 @@ object CollectionGameDAO {
                 if (rs.next()) {
                     collectionGame = CollectionGame(
                         idCollection = rs.getInt("id_collection"),
-                        name = rs.getString("name")
+                        name = rs.getString("name"),
+                        idPlayer = rs.getInt("id_player")
                     )
                 }
             }
@@ -92,18 +94,18 @@ object CollectionGameDAO {
     }
 
     fun insertCollection(collectionGame: CollectionGame) {
-        val sql = "INSERT INTO collections(name) VALUES (?)"
+        val sql = "INSERT INTO collections(name, id_player) VALUES (?, ?)"
 
         ConnectionDB.getConnection()?.use { conn ->
             conn.prepareStatement(sql).use { stmt ->
                 stmt.setString(1, collectionGame.name)
+                stmt.setInt(2, collectionGame.idPlayer)
 
                 if (stmt.executeUpdate() > 0) {
                     println("${collectionGame.name} inserted successfully.")
                 }
             }
         }
-
         println()
     }
 

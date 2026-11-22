@@ -6,13 +6,13 @@ import org.example.model.Player
 import org.example.model.Videogame
 import org.example.repository.CollectionGameDAO
 import org.example.repository.PlayerDAO
-import org.example.repository.VideogameCollectionDAO
+import org.example.repository.VideogamesCollectionDAO
 import org.example.repository.VideogameDAO
 
 val DATABASE = ConnectionDB.getConnection() ?: throw Exception("Database connection failed")
 val VIDEOGAME_DAO = VideogameDAO
 val COLLECTION_DAO = CollectionGameDAO
-val VIDEOGAME_COLLECTION_DAO = VideogameCollectionDAO
+val VIDEOGAME_COLLECTION_DAO = VideogamesCollectionDAO
 val PLAYER_DAO = PlayerDAO
 
 val newVideogame = Videogame(
@@ -25,7 +25,8 @@ val newVideogame = Videogame(
 
 val newCollection = CollectionGame(
     4,
-    "Playstation"
+    "Playstation",
+    1
 )
 
 val newPlayer = Player(
@@ -40,17 +41,7 @@ fun main() {
         println("Unable to connect to the database")
         return
     }
-
-
-    val videogames = VideogameDAO.readVideogames()
-
-    println("Videogames found: ${videogames.size}")
-
-    for (videogame in videogames) {
-        println(videogame)
-    }
-
-
+    
     /*
     ConnectionDB.testConnection()
 

@@ -11,7 +11,7 @@ object PlayerDAO {
             conn.prepareStatement(sql).use { stmt ->
                 stmt.setString(1, player.name)
                 if (stmt.executeUpdate() > 0) {
-                    println("${player.name} inserted succesfully.")
+                    println("${player.name} inserted successfully.")
                 }
             }
         }
@@ -25,7 +25,7 @@ object PlayerDAO {
             conn.prepareStatement(sql).use { stmt ->
                 stmt.setInt(1, id)
                 if (stmt.executeUpdate() > 0) {
-                    println("Player with ID $id deleted succesfully.")
+                    println("Player with ID $id deleted successfully.")
                 } else {
                     println("No player found with ID $id to delete.")
                 }

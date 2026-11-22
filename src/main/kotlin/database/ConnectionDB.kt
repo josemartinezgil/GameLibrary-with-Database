@@ -21,7 +21,15 @@ object ConnectionDB {
     fun getConnection(): Connection? {
         return try {
             when (databaseType) {
-                "sqlite" -> DriverManager.getConnection(sqliteUrl)
+                "sqlite" -> {
+                    val conn = DriverManager.getConnection(sqliteUrl)
+
+                    conn.createStatement().use { stmt ->
+                        stmt.execute("PRAGMA foreign_keys = ON")
+                    }
+
+                    conn
+                }
                 "mysql" -> {
                     val password = System.getenv("MYSQL_PASSWORD")
 

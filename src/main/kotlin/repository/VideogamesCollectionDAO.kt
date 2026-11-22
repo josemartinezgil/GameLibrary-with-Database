@@ -3,7 +3,7 @@ package org.example.repository
 import org.example.database.ConnectionDB
 import kotlin.use
 
-object VideogameCollectionDAO {
+object VideogamesCollectionDAO {
     fun addVideogameToCollection(idCollection: Int, idVideogame: Int, dateAdded: String) {
         val sqlSelect = "SELECT id_videogame FROM videogames WHERE id_videogame = ?"
 

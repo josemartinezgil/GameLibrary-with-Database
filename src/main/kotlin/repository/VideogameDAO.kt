@@ -106,7 +106,7 @@ object VideogameDAO {
                 stmt.setDouble(4, videogame.rating)
                 stmt.setInt(5, videogame.idVideogame)
                 if (stmt.executeUpdate() > 0) {
-                    println("Videogame with ID ${videogame.idVideogame} updated succesfully.")
+                    println("Videogame with ID ${videogame.idVideogame} updated successfully.")
                 } else {
                     println("No videogame found with ID ${videogame.idVideogame} to update.")
                 }
@@ -143,7 +143,7 @@ object VideogameDAO {
             conn.prepareStatement(sql).use { stmt ->
                 stmt.setInt(1, id)
                 if (stmt.executeUpdate() > 0) {
-                    println("Videogame with ID $id deleted succesfully.")
+                    println("Videogame with ID $id deleted successfully.")
                 } else {
                     println("No videogame found with ID $id to delete.")
                 }
@@ -151,35 +151,5 @@ object VideogameDAO {
         }
 
         println()
-    }
-
-    // Implementada en VideogameCollection
-    fun addVideogameToCollection(idCollection: Int, idVideogame: Int, date: String) {
-        val sqlSelect = "SELECT id_videogame FROM videogames WHERE id = ?"
-        ConnectionDB.getConnection()?.use { conn ->
-            conn.prepareStatement(sqlSelect).use { stmt ->
-                stmt.setInt(1, idVideogame)
-
-                val rs = stmt.executeQuery()
-
-                if (!rs.next()) {
-                    throw Exception("No videogame found with ID $idVideogame to collection.")
-                }
-
-                rs.close()
-                stmt.close()
-
-                val sqlInsert = "INSERT INTO collection_videogames (id_collection, id_videogame, date_added) VALUES (?, ?, ?)"
-
-                val insert = conn.prepareStatement(sqlInsert)
-
-                insert.setInt(1, idCollection)
-                insert.setInt(2, idVideogame)
-                insert.setString(3, date)
-
-                insert.executeUpdate()
-                insert.close()
-            }
-        }
     }
 }
