@@ -31,7 +31,7 @@ object VideogameDAO {
             conn.prepareStatement("SELECT * FROM videogames").use { stmt ->
                 val rs = stmt.executeQuery()
                 while (rs.next()) {
-                    println("* [${rs.getString("id_videogame")}] ${rs.getString("title")}, ${rs.getInt("year")} (${rs.getString("genre")}) - ${rs.getInt("rating")}")
+                    println("* [${rs.getString("id_videogame")}] ${rs.getString("title")}, ${rs.getInt("year")} (${rs.getString("genre")}) - ${rs.getDouble("rating")}")
                 }
             }
         }
@@ -153,6 +153,7 @@ object VideogameDAO {
         println()
     }
 
+    // Implementada en VideogameCollection
     fun addVideogameToCollection(idCollection: Int, idVideogame: Int, date: String) {
         val sqlSelect = "SELECT id_videogame FROM videogames WHERE id = ?"
         ConnectionDB.getConnection()?.use { conn ->
