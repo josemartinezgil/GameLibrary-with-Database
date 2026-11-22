@@ -72,7 +72,7 @@ object CollectionGameDAO {
     }
 
     fun listCollectionById(collectionGame: CollectionGame) {
-        println("*** COLLECTION ***")
+        println("\n*** COLLECTION ***")
 
         val sql = "SELECT * FROM collections WHERE id_collection = ?"
 
