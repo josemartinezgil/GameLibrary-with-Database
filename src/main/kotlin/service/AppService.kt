@@ -142,6 +142,24 @@ object AppService {
     }
 
 
+    fun showPlayerCollections(idPlayer: Int) {
+        val collections = CollectionGameDAO.readCollections()
+
+        var found = false
+
+        for (collection in collections) {
+            if (collection.idPlayer == idPlayer) {
+                CollectionGameDAO.listCollectionById(collection)
+                found = true
+            }
+        }
+
+        if (!found) {
+            println("This player has no collections.")
+        }
+    }
+
+
     fun addNewCollection(idPlayer: Int) {
         print("Insert collection name: ")
         val name = readln().trim()

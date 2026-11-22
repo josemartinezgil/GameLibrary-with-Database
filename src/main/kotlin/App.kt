@@ -103,7 +103,7 @@ fun collectionMenu(idPlayer: Int) {
 
 
         when (option) {
-            1 -> COLLECTION_DAO.listCollectionsByName()
+            1 -> SERVICE.showPlayerCollections(idPlayer)
             2 -> SERVICE.addNewCollection(idPlayer)
             3 -> SERVICE.showCollectionById()
             4 -> SERVICE.updateCollectionName()
